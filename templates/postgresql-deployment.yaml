@@ -35,11 +35,34 @@ spec:
         {{- include "inngest.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgresql
     spec:
+      # Security: Use dedicated service account with minimal permissions
+      serviceAccountName: {{ include "inngest.postgresql.fullname" . }}
+      # Security: Disable service account token automounting
+      automountServiceAccountToken: false
+      # Security: Pod-level security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999  # postgres user
+        runAsGroup: 999
+        fsGroup: 999
       containers:
         # PostgreSQL database container
         - name: postgresql
           image: "{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
           imagePullPolicy: {{ .Values.postgresql.image.pullPolicy }}
+          # Security: Container-level security context
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            capabilities:
+              drop:
+                - ALL
+          # Resource management for stability and security
+          resources:
+            {{- toYaml .Values.postgresql.resources | nindent 12 }}
           ports:
             # Standard PostgreSQL port
             - name: postgresql
@@ -65,6 +88,9 @@ spec:
                 secretKeyRef:
                   name: {{ include "inngest.postgresql.fullname" . }}
                   key: postgres-password
+            # PostgreSQL data directory location
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           # Health check that restarts container if PostgreSQL becomes unresponsive
           livenessProbe:
             exec:
@@ -91,17 +117,27 @@ spec:
             timeoutSeconds: 5          # Timeout after 5 seconds
             failureThreshold: 6        # Mark unready after 6 failures
             successThreshold: 1
-          {{- if .Values.postgresql.persistence.enabled }}
-          # Mount persistent volume for database data
+          # Volume mounts for persistent data and writable directories
           volumeMounts:
+            {{- if .Values.postgresql.persistence.enabled }}
             - name: data
               mountPath: /var/lib/postgresql/data  # PostgreSQL data directory
-          {{- end }}
-      {{- if .Values.postgresql.persistence.enabled }}
-      # Persistent storage for database data (survives pod restarts)
+            {{- end }}
+            # Writable directories required by PostgreSQL
+            - name: tmp
+              mountPath: /tmp
+            - name: var-run-postgresql
+              mountPath: /var/run/postgresql
+      # Volumes for persistent data and writable directories
       volumes:
+        {{- if .Values.postgresql.persistence.enabled }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "inngest.postgresql.fullname" . }}
-      {{- end }}
+        {{- end }}
+        # Writable temporary directories
+        - name: tmp
+          emptyDir: {}
+        - name: var-run-postgresql
+          emptyDir: {}
 {{- end }}

@@ -144,6 +144,15 @@ postgresql:
   service:
     port: 5432 # PostgreSQL service port
 
+  # Resource management for PostgreSQL
+  resources:
+    limits:
+      cpu: 1000m      # 1 CPU core limit
+      memory: 1Gi     # 1GB memory limit
+    requests:
+      cpu: 100m       # 100m CPU request
+      memory: 256Mi   # 256MB memory request
+
   # Persistent storage configuration
   persistence:
     enabled: true # Enable persistent storage
@@ -163,6 +172,15 @@ redis:
 
   service:
     port: 6379 # Redis service port
+
+  # Resource management for Redis
+  resources:
+    limits:
+      cpu: 500m       # 500m CPU limit
+      memory: 512Mi   # 512MB memory limit
+    requests:
+      cpu: 100m       # 100m CPU request
+      memory: 128Mi   # 128MB memory request
 
   # Persistent storage for Redis data
   persistence:

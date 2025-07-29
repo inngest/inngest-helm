@@ -36,11 +36,34 @@ spec:
         {{- include "inngest.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: redis
     spec:
+      # Security: Use dedicated service account with minimal permissions
+      serviceAccountName: {{ include "inngest.redis.fullname" . }}
+      # Security: Disable service account token automounting
+      automountServiceAccountToken: false
+      # Security: Pod-level security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999  # redis user in official redis image
+        runAsGroup: 999
+        fsGroup: 999
       containers:
         # Redis cache container
         - name: redis
           image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
           imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+          # Security: Container-level security context
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            capabilities:
+              drop:
+                - ALL
+          # Resource management for stability and security
+          resources:
+            {{- toYaml .Values.redis.resources | nindent 12 }}
           ports:
             # Standard Redis port
             - name: redis
@@ -66,18 +89,27 @@ spec:
             timeoutSeconds: 5          # Timeout after 5 seconds
             successThreshold: 1
             failureThreshold: 5        # Mark unready after 5 failures
-          {{- if .Values.redis.persistence.enabled }}
-          # Mount persistent volume for Redis data (optional - Redis is primarily in-memory)
+          # Volume mounts for persistent data and temporary directories
           volumeMounts:
+            {{- if .Values.redis.persistence.enabled }}
             - name: data
               mountPath: /data          # Redis data directory
-          {{- end }}
-      {{- if .Values.redis.persistence.enabled }}
-      # Persistent storage for Redis data (optional for cache durability)
-      # Note: Redis is primarily an in-memory cache, persistence is for durability
+            {{- end }}
+            # Security: Writable temporary directories (since root filesystem is read-only)
+            - name: tmp
+              mountPath: /tmp
+            - name: var-log
+              mountPath: /var/log
+      # Volumes for persistent data and temporary directories
       volumes:
+        {{- if .Values.redis.persistence.enabled }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "inngest.redis.fullname" . }}
-      {{- end }}
+        {{- end }}
+        # Security: Temporary volumes for read-only root filesystem
+        - name: tmp
+          emptyDir: {}
+        - name: var-log
+          emptyDir: {}
 {{- end }}
