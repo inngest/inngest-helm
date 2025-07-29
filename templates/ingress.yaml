@@ -13,6 +13,11 @@ Note: This ingress only exposes the main Inngest port (8288) for UI and API acce
 The Connect service port (8289) is typically used internally by applications
 and may not need external exposure.
 
+Security Warning: When exposing Inngest through ingress, the web UI and GraphQL 
+endpoints are publicly accessible unless protected. This example disables the UI for 
+security. If you need the UI, implement proper authentication/authorization at the 
+ingress level.
+
 Configure your DNS to point to the ingress controller's IP address.
 */}}
 {{- if .Values.ingress.enabled -}}
