@@ -316,7 +316,7 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod" # Optional: for automatic TLS
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" # Required for automatic Let's Encrypt certificates
   hosts:
     - host: inngest.example.com
       paths:
@@ -352,6 +352,160 @@ helm install inngest . -f values-ingress.yaml --create-namespace
 - UI Dashboard: Disabled for security (noUI: true)
 
 **Note**: Replace `inngest.example.com` with your actual domain and ensure DNS points to your ingress controller.
+
+## Setting Up HTTPS with Let's Encrypt
+
+For automatic SSL certificate provisioning using Let's Encrypt, you need to install and configure cert-manager.
+
+### Prerequisites for HTTPS
+
+1. **Ingress Controller**: You need an ingress controller (like nginx-ingress) already installed
+2. **cert-manager**: For automatic SSL certificate management
+3. **Valid Domain**: A domain name pointing to your ingress controller's IP address
+
+### Installing cert-manager
+
+Install cert-manager using Helm (recommended):
+
+```bash
+# Add the cert-manager repository
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+
+# Install cert-manager with CRDs
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --set installCRDs=true
+```
+
+Verify cert-manager installation:
+
+```bash
+kubectl get pods -n cert-manager
+```
+
+### Setting Up Let's Encrypt ClusterIssuer
+
+Create a ClusterIssuer for Let's Encrypt certificate provisioning:
+
+```yaml
+# letsencrypt-clusterissuer.yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: your-email@example.com # CHANGE THIS TO YOUR EMAIL
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: your-email@example.com # CHANGE THIS TO YOUR EMAIL
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+```
+
+Apply the ClusterIssuer:
+
+```bash
+# Update the email address in the file first
+kubectl apply -f letsencrypt-clusterissuer.yaml
+```
+
+### Complete HTTPS Ingress Example
+
+Here's a complete example with automatic SSL certificate provisioning:
+
+```yaml
+# values-https-ingress.yaml
+inngest:
+  eventKey: "your_event_key_here" # Must be a hexadecimal string
+  signingKey: "your_signing_key_here" # Must be a hexadecimal string
+  noUI: true # Disable UI for security when exposed via ingress
+
+# Ingress configuration with Let's Encrypt
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    # Let's Encrypt annotations for automatic SSL certificate provisioning
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # Use letsencrypt-staging for testing, letsencrypt-prod for production
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  hosts:
+    - host: inngest.yourdomain.com # CHANGE TO YOUR DOMAIN
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: inngest-tls
+      hosts:
+        - inngest.yourdomain.com # CHANGE TO YOUR DOMAIN
+```
+
+Deploy with HTTPS:
+
+```bash
+helm install inngest . -f values-https-ingress.yaml --create-namespace
+```
+
+### Troubleshooting SSL Certificates
+
+Check certificate status:
+
+```bash
+# Check certificate resource
+kubectl get certificates -n inngest
+kubectl describe certificate inngest-tls -n inngest
+
+# Check certificate request
+kubectl get certificaterequests -n inngest
+
+# Check cert-manager logs
+kubectl logs -n cert-manager deployment/cert-manager
+```
+
+**Common Issues:**
+
+1. **Certificate shows "False" for READY**: Usually DNS or HTTP-01 challenge issues
+
+   - Verify your domain points to the ingress controller IP
+   - Check ingress controller logs
+   - Ensure port 80 is accessible for Let's Encrypt validation
+
+2. **Rate limiting from Let's Encrypt**: Use `letsencrypt-staging` issuer for testing
+
+3. **DNS propagation delays**: Wait for DNS changes to propagate globally
+
+**Testing with Staging:**
+
+For testing, use the staging ClusterIssuer to avoid rate limits:
+
+```yaml
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging" # Use staging for testing
+```
+
+Once working, switch to `letsencrypt-prod` for the trusted certificate.
 
 ## Namespace Configuration
 

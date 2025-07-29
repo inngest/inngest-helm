@@ -57,14 +57,21 @@ service:
 # Ingress configuration for external access
 ingress:
   enabled: false # Set to true to enable ingress
-  className: "" # Ingress class (e.g., "nginx", "traefik")
-  annotations: {} # Additional ingress annotations
+  className: "nginx" # Ingress class (e.g., "nginx", "traefik")
+  annotations: 
+    # Let's Encrypt annotations for automatic SSL certificate provisioning
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # Use letsencrypt-staging for testing, letsencrypt-prod for production
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:
     - host: chart-example.local # Change to your domain
       paths:
         - path: /
           pathType: Prefix
-  tls: [] # TLS configuration for HTTPS
+  tls: 
+    - secretName: inngest-tls # Secret name for TLS certificate
+      hosts:
+        - chart-example.local # Change to your domain
 
 # Resource limits and requests for the main Inngest container
 # IMPORTANT: Set appropriate limits for production use
