@@ -13,7 +13,7 @@ A Helm chart for deploying Inngest on Kubernetes clusters.
 
 ## Installation
 
-### Quick Start with Internal Dependencies
+### Quick Start with Internal Postgres and Redis
 
 Deploy Inngest with bundled PostgreSQL and Redis instances:
 
