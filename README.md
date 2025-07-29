@@ -419,10 +419,6 @@ kubectl port-forward svc/inngest 8288:8288 -n inngest
 # Access UI at http://localhost:8288
 ```
 
-### Ingress (Production)
-
-For external access with ingress, see the dedicated ingress example in the examples section below.
-
 ### Service URLs for Applications
 
 Configure your applications to send events to:
