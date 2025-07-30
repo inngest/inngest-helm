@@ -59,7 +59,7 @@ spec:
               protocol: TCP
             # Inngest Connect service port for function registration (8289)
             - name: connect
-              containerPort: {{ .Values.service.uiPort }}
+              containerPort: {{ .Values.service.connPort }}
               protocol: TCP
           # Health check that restarts container if it becomes unresponsive
           livenessProbe:

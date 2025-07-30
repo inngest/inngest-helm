@@ -42,7 +42,7 @@ spec:
         - protocol: TCP
           port: {{ .Values.service.port }}     # Main Inngest API port (8288)
         - protocol: TCP
-          port: {{ .Values.service.uiPort }}   # Inngest Connect port (8289)
+          port: {{ .Values.service.connPort }}   # Inngest Connect port (8289)
         {{- if .Values.keda.enabled }}
         - protocol: TCP
           port: 9090                           # Prometheus sidecar port

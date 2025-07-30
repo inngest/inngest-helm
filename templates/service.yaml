@@ -26,7 +26,7 @@ spec:
       protocol: TCP
       name: http
     # Inngest Connect port - function registration and execution
-    - port: {{ .Values.service.uiPort }}   # External port (8289)
+    - port: {{ .Values.service.connPort }}   # External port (8289)
       targetPort: connect                  # Container port name
       protocol: TCP
       name: connect

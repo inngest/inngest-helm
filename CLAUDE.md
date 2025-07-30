@@ -113,7 +113,7 @@ The Inngest self-hosted service exposes two ports:
 - **Port 8288**: UI dashboard, Event APIs, other REST APIs, and Prometheus metrics endpoint (/metrics)
 - **Port 8289**: Inngest Connect service for function registration and execution
 
-Note: In values.yaml, `service.port` (8288) is the main service port, and `service.uiPort` (8289) is the connect gateway port.
+Note: In values.yaml, `service.port` (8288) is the main service port, and `service.connPort` (8289) is the connect gateway port.
 
 ## Kubernetes Considerations
 
@@ -137,30 +137,36 @@ Note: In values.yaml, `service.port` (8288) is the main service port, and `servi
 Key configuration sections in values.yaml:
 
 ### Required Configuration
+
 - `inngest.eventKey` / `inngest.signingKey` - **REQUIRED** authentication keys
 - Must be set before deployment
 
 ### Core Application
+
 - `replicaCount` - Number of Inngest pods (default: 1)
 - `image.repository` / `image.tag` - Container image configuration
 - `resources` - CPU/memory limits and requests
 
 ### Dependencies
+
 - `postgresql.enabled` - Deploy internal PostgreSQL (default: true)
 - `redis.enabled` - Deploy internal Redis (default: true)
 - `inngest.postgres.uri` / `inngest.redis.uri` - External database URIs
 
 ### Networking & Access
+
 - `service.type` - Kubernetes service type (default: ClusterIP)
 - `ingress.enabled` - Enable ingress for external access
 - `networkPolicy.enabled` - Enable network policies for security
 
 ### Scaling & Performance
+
 - `keda.enabled` - Enable KEDA autoscaling based on queue depth
 - `inngest.queueWorkers` - Number of executor workers (default: 100)
 - `inngest.tick` - Queue polling interval in ms (default: 150)
 
 ### Security
+
 - Pod and container security contexts with non-root users
 - Read-only root filesystems
 - Dropped Linux capabilities

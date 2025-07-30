@@ -52,13 +52,13 @@ securityContext:
 service:
   type: ClusterIP # Service type (ClusterIP, NodePort, LoadBalancer)
   port: 8288 # Main Inngest API and UI port
-  uiPort: 8289 # Inngest Connect service port for function registration
+  connPort: 8289 # Inngest Connect service port for function registration
 
 # Ingress configuration for external access
 ingress:
   enabled: false # Set to true to enable ingress
   className: "nginx" # Ingress class (e.g., "nginx", "traefik")
-  annotations: 
+  annotations:
     # Let's Encrypt annotations for automatic SSL certificate provisioning
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     # Use letsencrypt-staging for testing, letsencrypt-prod for production
@@ -68,7 +68,7 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-  tls: 
+  tls:
     - secretName: inngest-tls # Secret name for TLS certificate
       hosts:
         - chart-example.local # Change to your domain
@@ -154,11 +154,11 @@ postgresql:
   # Resource management for PostgreSQL
   resources:
     limits:
-      cpu: 1000m      # 1 CPU core limit
-      memory: 1Gi     # 1GB memory limit
+      cpu: 1000m # 1 CPU core limit
+      memory: 1Gi # 1GB memory limit
     requests:
-      cpu: 100m       # 100m CPU request
-      memory: 256Mi   # 256MB memory request
+      cpu: 100m # 100m CPU request
+      memory: 256Mi # 256MB memory request
 
   # Persistent storage configuration
   persistence:
@@ -183,11 +183,11 @@ redis:
   # Resource management for Redis
   resources:
     limits:
-      cpu: 500m       # 500m CPU limit
-      memory: 512Mi   # 512MB memory limit
+      cpu: 500m # 500m CPU limit
+      memory: 512Mi # 512MB memory limit
     requests:
-      cpu: 100m       # 100m CPU request
-      memory: 128Mi   # 128MB memory request
+      cpu: 100m # 100m CPU request
+      memory: 128Mi # 128MB memory request
 
   # Persistent storage for Redis data
   persistence:
