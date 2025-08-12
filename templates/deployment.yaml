@@ -55,7 +55,7 @@ spec:
           ports:
             # Main Inngest API and UI port (8288)
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 8288
               protocol: TCP
             # Inngest Connect service port for function registration (8289)
             - name: connect
