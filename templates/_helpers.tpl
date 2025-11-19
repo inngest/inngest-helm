@@ -50,6 +50,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Common labels for the main Inngest server component.
+Includes component: server label for server resources.
+*/}}
+{{- define "inngest.server.labels" -}}
+{{ include "inngest.labels" . }}
+app.kubernetes.io/component: server
+{{- end }}
+
+{{/*
 Selector labels used for pod/service matching.
 These labels are used by Services to select Pods and should remain stable
 across chart upgrades to maintain service connectivity.
@@ -57,6 +66,16 @@ across chart upgrades to maintain service connectivity.
 {{- define "inngest.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "inngest.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels for the main Inngest server component.
+Extends the base selector labels with component: server to distinguish
+from other components like Redis and PostgreSQL.
+*/}}
+{{- define "inngest.server.selectorLabels" -}}
+{{ include "inngest.selectorLabels" . }}
+app.kubernetes.io/component: server
 {{- end }}
 
 {{/*

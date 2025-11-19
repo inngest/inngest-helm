@@ -16,7 +16,7 @@ metadata:
   name: {{ include "inngest.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
+    {{- include "inngest.server.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}  # Service type (ClusterIP, NodePort, LoadBalancer)
   ports:
@@ -39,4 +39,4 @@ spec:
     {{- end }}
   # Route traffic to pods with matching labels
   selector:
-    {{- include "inngest.selectorLabels" . | nindent 4 }}
+    {{- include "inngest.server.selectorLabels" . | nindent 4 }}
