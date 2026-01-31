@@ -13,6 +13,25 @@ A Helm chart for deploying Inngest on Kubernetes clusters.
 
 ## Installation
 
+### From OCI Registry (Recommended)
+
+```bash
+# Install latest version
+helm install inngest oci://ghcr.io/inngest/inngest-helm \
+  --set inngest.signingKey="your-signing-key" \
+  --set inngest.eventKey="your-event-key" \
+  --create-namespace
+
+# Install specific version
+helm install inngest oci://ghcr.io/inngest/inngest-helm --version 0.1.0 \
+  --set inngest.signingKey="your-signing-key" \
+  --set inngest.eventKey="your-event-key" \
+  --create-namespace
+
+# Install with custom values file
+helm install inngest oci://ghcr.io/inngest/inngest-helm -f my-values.yaml --create-namespace
+```
+
 ### Quick Start with Internal Postgres and Redis
 
 Deploy Inngest with bundled PostgreSQL and Redis instances:
