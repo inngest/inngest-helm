@@ -79,15 +79,15 @@ livenessProbe:
   initialDelaySeconds: 60
 
 # Resource limits and requests for the main Inngest container
-# IMPORTANT: Set appropriate limits for production use
+# These defaults provide headroom for typical workloads; adjust for production
 resources:
-  {}
-  # limits:
-  #   cpu: 1000m
-  #   memory: 1Gi
-  # requests:
-  #   cpu: 500m
-  #   memory: 512Mi
+  limits:
+    {}
+    # cpu: 2000m
+    # memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
 
 # Standard HPA autoscaling is disabled - use KEDA for metrics-based scaling
 
