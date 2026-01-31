@@ -73,6 +73,11 @@ ingress:
       hosts:
         - chart-example.local # Change to your domain
 
+# Liveness probe configuration for the main Inngest container
+# Increase initialDelaySeconds when connecting to external databases that take longer to initialize
+livenessProbe:
+  initialDelaySeconds: 60
+
 # Resource limits and requests for the main Inngest container
 # IMPORTANT: Set appropriate limits for production use
 resources:
