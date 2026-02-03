@@ -55,11 +55,11 @@ spec:
           ports:
             # Main Inngest API and UI port (8288)
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.inngest.port }}
               protocol: TCP
             # Inngest Connect service port for function registration (8289)
             - name: connect
-              containerPort: {{ .Values.service.connPort }}
+              containerPort: {{ .Values.inngest.connectGatewayPort }}
               protocol: TCP
           # Health check that restarts container if it becomes unresponsive
           livenessProbe:

@@ -21,12 +21,12 @@ spec:
   type: {{ .Values.service.type }}  # Service type (ClusterIP, NodePort, LoadBalancer)
   ports:
     # Main Inngest port - API, UI, webhooks, and /metrics endpoint
-    - port: {{ .Values.service.port }}    # External port (8288)
+    - port: {{ .Values.service.port }}     # External port (8288)
       targetPort: http                     # Container port name
       protocol: TCP
       name: http
     # Inngest Connect port - function registration and execution
-    - port: {{ .Values.service.connPort }}   # External port (8289)
+    - port: {{ .Values.service.connPort }} # External port (8289)
       targetPort: connect                  # Container port name
       protocol: TCP
       name: connect

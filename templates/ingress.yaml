@@ -4,18 +4,18 @@ Kubernetes Ingress resource for external access to Inngest services.
 Only created when ingress.enabled is true.
 
 This ingress provides:
-- External HTTP/HTTPS access to the Inngest UI and API (port 8288)
+- External HTTP/HTTPS access to the Inngest UI and API (default port 8288)
 - TLS termination support
 - Custom annotations for ingress controller configuration
 - Kubernetes 1.20+ networking.k8s.io/v1 API
 
-Note: This ingress only exposes the main Inngest port (8288) for UI and API access.
-The Connect service port (8289) is typically used internally by applications
+Note: This ingress only exposes the main Inngest port (default: 8288) for UI and API access.
+The Connect service port (default: 8289) is typically used internally by applications
 and may not need external exposure.
 
-Security Warning: When exposing Inngest through ingress, the web UI and GraphQL 
-endpoints are publicly accessible unless protected. This example disables the UI for 
-security. If you need the UI, implement proper authentication/authorization at the 
+Security Warning: When exposing Inngest through ingress, the web UI and GraphQL
+endpoints are publicly accessible unless protected. This example disables the UI for
+security. If you need the UI, implement proper authentication/authorization at the
 ingress level.
 
 Configure your DNS to point to the ingress controller's IP address.
