@@ -73,16 +73,21 @@ ingress:
       hosts:
         - chart-example.local # Change to your domain
 
+# Liveness probe configuration for the main Inngest container
+# Increase initialDelaySeconds when connecting to external databases that take longer to initialize
+livenessProbe:
+  initialDelaySeconds: 60
+
 # Resource limits and requests for the main Inngest container
-# IMPORTANT: Set appropriate limits for production use
+# These defaults provide headroom for typical workloads; adjust for production
 resources:
-  {}
-  # limits:
-  #   cpu: 1000m
-  #   memory: 1Gi
-  # requests:
-  #   cpu: 500m
-  #   memory: 512Mi
+  limits:
+    {}
+    # cpu: 2000m
+    # memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
 
 # Standard HPA autoscaling is disabled - use KEDA for metrics-based scaling
 
@@ -168,6 +173,11 @@ postgresql:
     accessModes:
       - ReadWriteOnce # Access mode for the volume
 
+  # Node scheduling constraints for PostgreSQL pods
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 # Internal Redis cache configuration
 # Set enabled: false to use external Redis (configure inngest.redis.uri)
 redis:
@@ -196,6 +206,11 @@ redis:
     storageClass: "" # Storage class (uses default if empty)
     accessModes:
       - ReadWriteOnce # Access mode for the volume
+
+  # Node scheduling constraints for Redis pods
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 # KEDA autoscaling configuration
 # Uses Prometheus sidecar to scrape Inngest metrics for scaling decisions
