@@ -17,20 +17,23 @@ A Helm chart for deploying Inngest on Kubernetes clusters.
 
 ```bash
 # Install latest version
-helm install inngest oci://ghcr.io/inngest/inngest-helm \
+helm install inngest oci://ghcr.io/inngest/inngest-helm/inngest \
   --set inngest.signingKey="your-signing-key" \
   --set inngest.eventKey="your-event-key" \
   --create-namespace
 
 # Install specific version
-helm install inngest oci://ghcr.io/inngest/inngest-helm --version 0.2.0 \
+helm install inngest oci://ghcr.io/inngest/inngest-helm/inngest --version 0.2.0 \
   --set inngest.signingKey="your-signing-key" \
   --set inngest.eventKey="your-event-key" \
   --create-namespace
 
 # Install with custom values file
-helm install inngest oci://ghcr.io/inngest/inngest-helm -f my-values.yaml --create-namespace
+helm install inngest oci://ghcr.io/inngest/inngest-helm/inngest -f my-values.yaml --create-namespace
 ```
+
+> [!TIP]
+> Review the [self-hosting documentation](https://www.inngest.com/docs/self-hosting?ref=github-helm) for configuration options including valid signing key generation.
 
 ### Quick Start with Internal Postgres and Redis
 
