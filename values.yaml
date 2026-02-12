@@ -81,8 +81,7 @@ livenessProbe:
 # Resource limits and requests for the main Inngest container
 # These defaults provide headroom for typical workloads; adjust for production
 resources:
-  limits:
-    {}
+  limits: {}
     # cpu: 2000m
     # memory: 2Gi
   requests:
@@ -90,6 +89,12 @@ resources:
     memory: 1Gi
 
 # Standard HPA autoscaling is disabled - use KEDA for metrics-based scaling
+
+# Termination grace period for graceful shutdown (in seconds)
+# Allows in-flight function executions to complete before pod termination
+# Set this as long as you may need a single step or a series of checkpointed
+# steps to execute for to ensure the server does not terminate early.
+terminationGracePeriodSeconds: 60
 
 # Node selection constraints
 nodeSelector: {}
