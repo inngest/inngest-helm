@@ -15,7 +15,7 @@ metadata:
   name: {{ include "inngest.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
+    {{- include "inngest.server.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.keda.enabled }}
   # Static replica count when KEDA is disabled
@@ -24,7 +24,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "inngest.selectorLabels" . | nindent 6 }}
+      {{- include "inngest.server.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -32,7 +32,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "inngest.selectorLabels" . | nindent 8 }}
+        {{- include "inngest.server.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

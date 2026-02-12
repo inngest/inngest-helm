@@ -32,7 +32,7 @@ metadata:
   name: {{ $fullName }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
+    {{- include "inngest.server.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   # Ingress controller specific annotations (e.g., nginx.ingress.kubernetes.io/*)
   annotations:
