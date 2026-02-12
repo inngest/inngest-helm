@@ -18,8 +18,7 @@ metadata:
   name: {{ include "inngest.postgresql.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
-    app.kubernetes.io/component: postgresql
+    {{- include "inngest.postgresql.labels" . | nindent 4 }}
 spec:
   # Access modes define how the volume can be mounted
   accessModes:

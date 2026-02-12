@@ -17,7 +17,7 @@ metadata:
   name: {{ include "inngest.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
+    {{- include "inngest.server.labels" . | nindent 4 }}
 data:
   # Server configuration
   {{- if .Values.inngest.config }}

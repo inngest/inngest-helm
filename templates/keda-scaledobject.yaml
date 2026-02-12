@@ -19,7 +19,7 @@ metadata:
   name: {{ include "inngest.fullname" . }}-prometheus-config
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
+    {{- include "inngest.server.labels" . | nindent 4 }}
 data:
   prometheus.yml: |
     global:
@@ -44,7 +44,7 @@ metadata:
   name: {{ include "inngest.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
+    {{- include "inngest.server.labels" . | nindent 4 }}
 spec:
   # Target deployment to scale
   scaleTargetRef:
