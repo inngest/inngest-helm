@@ -26,6 +26,12 @@ serviceAccount:
   annotations: {} # Annotations to add to the service account
   name: "" # Name of service account (uses default if empty)
 
+# Additional labels applied to all chart resources (e.g., for org-wide labeling)
+commonLabels: {}
+
+# Additional labels applied to pods only (e.g., for pod-level selection or monitoring)
+podLabels: {}
+
 # Additional annotations for pods (e.g., for service mesh, monitoring)
 podAnnotations: {}
 
