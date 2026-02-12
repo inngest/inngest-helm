@@ -67,8 +67,10 @@ resources:
     cpu: 500m
     memory: 1Gi
 
-# Adjust liveness probe for slower database connections
+# Adjust liveness/readiness probes for slower database connections
 livenessProbe:
+  initialDelaySeconds: 90
+readinessProbe:
   initialDelaySeconds: 90
 ```
 
@@ -259,8 +261,10 @@ postgresql:
 redis:
   enabled: false
 
-# Liveness probe - increase for external databases that take longer to initialize
+# Liveness/readiness probes - increase for external databases that take longer to initialize
 livenessProbe:
+  initialDelaySeconds: 120
+readinessProbe:
   initialDelaySeconds: 120
 
 # External access (configure ingress separately if needed)
@@ -339,8 +343,10 @@ redis:
     enabled: true
     size: 10Gi
 
-# Liveness probe - increase for external databases that take longer to initialize
+# Liveness/readiness probes - increase for external databases that take longer to initialize
 livenessProbe:
+  initialDelaySeconds: 90
+readinessProbe:
   initialDelaySeconds: 90
 
 # Ingress configuration for external access
