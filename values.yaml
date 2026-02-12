@@ -78,6 +78,11 @@ ingress:
 livenessProbe:
   initialDelaySeconds: 60
 
+# Readiness probe configuration for the main Inngest container
+# Determines when the container is ready to receive traffic
+readinessProbe:
+  initialDelaySeconds: 60
+
 # Resource limits and requests for the main Inngest container
 # These defaults provide headroom for typical workloads; adjust for production
 resources:
