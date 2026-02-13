@@ -1,11 +1,14 @@
 # Chart, templates and values
-Chart.yaml @AndyInternet
-values.yaml @AndyInternet
-/templates @AndyInternet
+
+Chart.yaml @AndyInternet @inngest/maintainers
+values.yaml @AndyInternet @inngest/maintainers
+/templates @AndyInternet @inngest/maintainers
 
 # CI/CD and automation
-.github/ @AndyInternet
+
+.github/ @AndyInternet @inngest/maintainers
 
 # Documentation
-README.md @AndyInternet @djfarrelly
-CLAUDE.md @AndyInternet
+
+README.md @AndyInternet @inngest/maintainers
+CLAUDE.md @AndyInternet @inngest/maintainers
