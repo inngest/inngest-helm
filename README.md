@@ -387,6 +387,37 @@ helm install inngest . -f values-ingress.yaml --create-namespace
 
 **Note**: Replace `inngest.example.com` with your actual domain and ensure DNS points to your ingress controller.
 
+### 6. Using Sidecar Containers (e.g., GCP Cloud SQL Auth Proxy)
+
+You can add sidecar containers, init containers, and extra volumes to the Inngest pod using templated strings. This is useful for database proxies, log collectors, or other sidecar services.
+
+```yaml
+# values-gcp-sql.yaml
+inngest:
+  eventKey: "your_event_key_here"
+  signingKey: "your_signing_key_here"
+  postgres:
+    uri: "postgres://inngest:password@localhost:5432/inngest" # Connects via sidecar proxy
+
+  extraContainers:
+    - name: cloud-sql-proxy
+      image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.0
+      args:
+        - "--structured-logs"
+        - "my-project:us-central1:my-instance"
+      securityContext:
+        runAsNonRoot: true
+
+postgresql:
+  enabled: false
+```
+
+Deploy:
+
+```bash
+helm install inngest . -f values-gcp-sql.yaml --create-namespace
+```
+
 ## Setting Up HTTPS with Let's Encrypt
 
 For automatic SSL certificate provisioning using Let's Encrypt, you need to install and configure cert-manager.
@@ -690,6 +721,8 @@ kubectl delete pvc -l app.kubernetes.io/name=inngest -n inngest
 | `inngest.signingKey` | Signing key for validation   | `""`        | **Yes**  |
 | `postgresql.enabled` | Enable bundled PostgreSQL    | `true`      | No       |
 | `redis.enabled`      | Enable bundled Redis         | `true`      | No       |
+| `inngest.extraContainers` | Extra sidecar containers (template string) | `""` | No |
+| `inngest.extraInitContainers` | Extra init containers (template string) | `""` | No |
 | `ingress.enabled`    | Enable ingress               | `false`     | No       |
 | `keda.enabled`       | Enable KEDA autoscaling      | `false`     | No       |
 

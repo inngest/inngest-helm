@@ -138,6 +138,19 @@ inngest:
   sqlite:
     dir: "" # SQLite directory path (INNGEST_SQLITE_DIR)
 
+  # Extra containers to add to the Inngest pod as sidecars
+  # Useful for database proxies, log collectors, or other sidecar services
+  # Example:
+  #   extraContainers:
+  #     - name: cloud-sql-proxy
+  #       image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.0
+  #       args: ["--structured-logs", "my-project:us-central1:my-instance"]
+  extraContainers: []
+
+  # Extra init containers to add to the Inngest pod
+  extraInitContainers: []
+
+
 # Internal PostgreSQL database configuration
 # Set enabled: false to use external PostgreSQL (configure inngest.postgres.uri)
 postgresql:

@@ -44,9 +44,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.inngest.extraInitContainers }}
       initContainers:
-        {{- with .Values.inngest.extraInitContainers }}
-        {{- tpl . $ | nindent 8 }}
-        {{- end }}
+        {{- toYaml .Values.inngest.extraInitContainers | nindent 8 }}
       {{- end }}
       containers:
         # Main Inngest application container
@@ -111,8 +109,7 @@ spec:
             - name: inngest-data
               mountPath: /data
         {{- if .Values.inngest.extraContainers }}
-        {{- with .Values.inngest.extraContainers }}
-        {{- tpl . $ | nindent 8 }}
+        {{- toYaml .Values.inngest.extraContainers | nindent 8 }}
         {{- end }}
         {{- if .Values.keda.enabled }}
         # Prometheus sidecar container - scrapes Inngest metrics for KEDA autoscaling
