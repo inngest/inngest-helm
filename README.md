@@ -71,7 +71,7 @@ resources:
 livenessProbe:
   initialDelaySeconds: 90
 readinessProbe:
-  initialDelaySeconds: 90
+  initialDelaySeconds: 60
 ```
 
 Install with custom values:
