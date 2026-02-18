@@ -51,6 +51,10 @@ spec:
       # Pod-level security context - runs as non-root user for security
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.inngest.extraInitContainers }}
+      initContainers:
+        {{- toYaml .Values.inngest.extraInitContainers | nindent 8 }}
+      {{- end }}
       containers:
         # Main Inngest application container
         - name: {{ .Chart.Name }}
@@ -104,6 +108,9 @@ spec:
               mountPath: /tmp
             - name: inngest-data
               mountPath: /data
+        {{- if .Values.inngest.extraContainers }}
+        {{- toYaml .Values.inngest.extraContainers | nindent 8 }}
+        {{- end }}
         {{- if .Values.keda.enabled }}
         # Prometheus sidecar container - scrapes Inngest metrics for KEDA autoscaling
         # This container runs alongside the main Inngest container and provides
