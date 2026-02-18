@@ -2,7 +2,7 @@ apiVersion: v2
 name: inngest
 description: A Helm chart for self-hosting Inngest on Kubernetes
 type: application
-version: 0.2.0
+version: 0.3.0
 appVersion: "latest"
 icon: https://www.inngest.com/favicon-june-2025-light.svg
 keywords:
