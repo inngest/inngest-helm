@@ -47,6 +47,9 @@ helm.sh/chart: {{ include "inngest.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -88,6 +91,9 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/part-of: inngest
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -117,6 +123,9 @@ helm.sh/chart: {{ include "inngest.chart" . }}
 app.kubernetes.io/version: {{ .Values.postgresql.image.tag | quote }}
 app.kubernetes.io/part-of: inngest
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -146,6 +155,9 @@ helm.sh/chart: {{ include "inngest.chart" . }}
 app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
 app.kubernetes.io/part-of: inngest
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
