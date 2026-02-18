@@ -18,8 +18,7 @@ metadata:
   name: {{ include "inngest.postgresql.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
-    app.kubernetes.io/component: postgresql
+    {{- include "inngest.postgresql.labels" . | nindent 4 }}
 spec:
   type: ClusterIP  # Internal cluster access only
   ports:
@@ -30,6 +29,5 @@ spec:
       name: postgresql
   # Route traffic to PostgreSQL pods
   selector:
-    {{- include "inngest.selectorLabels" . | nindent 4 }}
-    app.kubernetes.io/component: postgresql
+    {{- include "inngest.postgresql.selectorLabels" . | nindent 4 }}
 {{- end }}

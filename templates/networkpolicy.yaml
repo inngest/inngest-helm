@@ -20,12 +20,12 @@ metadata:
   name: {{ include "inngest.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
+    {{- include "inngest.server.labels" . | nindent 4 }}
 spec:
   # Apply this policy to Inngest pods only
   podSelector:
     matchLabels:
-      {{- include "inngest.selectorLabels" . | nindent 6 }}
+      {{- include "inngest.server.selectorLabels" . | nindent 6 }}
   # Policy controls both incoming and outgoing traffic
   policyTypes:
     - Ingress  # Controls incoming traffic to Inngest pods

@@ -19,21 +19,18 @@ metadata:
   name: {{ include "inngest.postgresql.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
-    app.kubernetes.io/component: postgresql
+    {{- include "inngest.postgresql.labels" . | nindent 4 }}
 spec:
   # Single replica deployment - not suitable for production HA
   # Use external PostgreSQL for production workloads
   replicas: 1
   selector:
     matchLabels:
-      {{- include "inngest.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: postgresql
+      {{- include "inngest.postgresql.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "inngest.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: postgresql
+        {{- include "inngest.postgresql.selectorLabels" . | nindent 8 }}
     spec:
       # Security: Use dedicated service account with minimal permissions
       serviceAccountName: {{ include "inngest.postgresql.fullname" . }}

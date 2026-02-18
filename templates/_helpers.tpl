@@ -63,6 +63,104 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+===============================================================================
+INNGEST SERVER COMPONENT LABELS
+Labels for the main Inngest application server component.
+===============================================================================
+*/}}
+
+{{/*
+Inngest server selector labels.
+Used by Services to select Pods and by Deployments for pod matching.
+*/}}
+{{- define "inngest.server.selectorLabels" -}}
+app.kubernetes.io/name: inngest
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/component: server
+{{- end }}
+
+{{/*
+Inngest server full labels.
+Complete set of metadata labels for server resources.
+*/}}
+{{- define "inngest.server.labels" -}}
+helm.sh/chart: {{ include "inngest.chart" . }}
+{{ include "inngest.server.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/part-of: inngest
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+
+{{/*
+===============================================================================
+POSTGRESQL COMPONENT LABELS
+Labels for the PostgreSQL database component.
+===============================================================================
+*/}}
+
+{{/*
+PostgreSQL selector labels.
+Used by Services to select Pods and by Deployments for pod matching.
+*/}}
+{{- define "inngest.postgresql.selectorLabels" -}}
+app.kubernetes.io/name: postgresql
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/component: database
+{{- end }}
+
+{{/*
+PostgreSQL full labels.
+Complete set of metadata labels for PostgreSQL resources.
+*/}}
+{{- define "inngest.postgresql.labels" -}}
+helm.sh/chart: {{ include "inngest.chart" . }}
+{{ include "inngest.postgresql.selectorLabels" . }}
+app.kubernetes.io/version: {{ .Values.postgresql.image.tag | quote }}
+app.kubernetes.io/part-of: inngest
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+
+{{/*
+===============================================================================
+REDIS COMPONENT LABELS
+Labels for the Redis cache component.
+===============================================================================
+*/}}
+
+{{/*
+Redis selector labels.
+Used by Services to select Pods and by Deployments for pod matching.
+*/}}
+{{- define "inngest.redis.selectorLabels" -}}
+app.kubernetes.io/name: redis
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/component: queue
+{{- end }}
+
+{{/*
+Redis full labels.
+Complete set of metadata labels for Redis resources.
+*/}}
+{{- define "inngest.redis.labels" -}}
+helm.sh/chart: {{ include "inngest.chart" . }}
+{{ include "inngest.redis.selectorLabels" . }}
+app.kubernetes.io/version: {{ .Values.redis.image.tag | quote }}
+app.kubernetes.io/part-of: inngest
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use.
 If serviceAccount.create is true, creates a service account with the specified name.
 If no name is specified, uses the fullname template.

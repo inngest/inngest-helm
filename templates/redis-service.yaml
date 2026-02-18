@@ -18,8 +18,7 @@ metadata:
   name: {{ include "inngest.redis.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "inngest.labels" . | nindent 4 }}
-    app.kubernetes.io/component: redis
+    {{- include "inngest.redis.labels" . | nindent 4 }}
 spec:
   type: ClusterIP  # Internal cluster access only
   ports:
@@ -30,6 +29,5 @@ spec:
       name: redis
   # Route traffic to Redis pods
   selector:
-    {{- include "inngest.selectorLabels" . | nindent 4 }}
-    app.kubernetes.io/component: redis
+    {{- include "inngest.redis.selectorLabels" . | nindent 4 }}
 {{- end }}
