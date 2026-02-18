@@ -90,15 +90,6 @@ spec:
             failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          env:
-            {{- if .Values.postgresql.enabled }}
-            # When using internal PostgreSQL, get connection URI from secret (secure)
-            - name: INNGEST_POSTGRES_URI
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "inngest.postgresql.fullname" . }}
-                  key: postgres-uri
-            {{- end }}
           # Load configuration from ConfigMap and secrets
           envFrom:
             # Non-sensitive configuration (ports, log levels, etc.)

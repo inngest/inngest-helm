@@ -200,8 +200,7 @@ Priority:
 2. If postgresql.enabled is true (internal database), construct URI from values
 3. Otherwise, return empty (Inngest will use SQLite NOT RECOMMENDED)
 
-Note: For internal PostgreSQL, the actual URI is now stored in a Kubernetes Secret
-for security. This helper is used for ConfigMap when external URI is specified.
+The URI is stored in the main Inngest Kubernetes Secret for security.
 */}}
 {{- define "inngest.postgresql.uri" -}}
 {{- if .Values.inngest.postgres.uri }}
