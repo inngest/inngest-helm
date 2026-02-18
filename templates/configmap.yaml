@@ -6,7 +6,7 @@ This ConfigMap stores:
 - Server configuration (host, ports, polling intervals)
 - Performance tuning parameters (workers, tick rate, retry intervals)
 - Logging configuration (log level, JSON format, verbosity)
-- External service URLs (PostgreSQL, Redis, SQLite directories)
+- SQLite directory configuration
 
 Sensitive values like event keys and signing keys are stored separately
 in a Kubernetes Secret for security.
@@ -46,13 +46,6 @@ data:
   INNGEST_LOG_LEVEL: {{ .Values.inngest.logLevel | quote }}             # Log level (trace, debug, info, warn, error)
   {{- if .Values.inngest.verbose }}
   INNGEST_VERBOSE: "true"                           # Enable verbose logging
-  {{- end }}
-  # Database configuration (only for external databases)
-  {{- if and (not .Values.postgresql.enabled) .Values.inngest.postgres.uri }}
-  INNGEST_POSTGRES_URI: {{ .Values.inngest.postgres.uri | quote }}      # External PostgreSQL URI
-  {{- end }}
-  {{- if include "inngest.redis.uri" . }}
-  INNGEST_REDIS_URI: {{ include "inngest.redis.uri" . | quote }}         # Redis connection URI
   {{- end }}
   {{- if .Values.inngest.sqlite.dir }}
   INNGEST_SQLITE_DIR: {{ .Values.inngest.sqlite.dir | quote }}           # SQLite data directory
