@@ -133,7 +133,7 @@ Used by Services to select Pods and by Deployments for pod matching.
 {{- define "inngest.redis.selectorLabels" -}}
 app.kubernetes.io/name: redis
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/component: cache
+app.kubernetes.io/component: queue
 {{- end }}
 
 {{/*
