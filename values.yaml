@@ -79,6 +79,16 @@ ingress:
       hosts:
         - chart-example.local # Change to your domain
 
+# Init container to wait for PostgreSQL to be ready before starting Inngest
+# Only applies when postgresql.enabled is true (internal PostgreSQL)
+# For external PostgreSQL, ensure your database is available before deploying
+initContainers:
+  waitForPostgres:
+    enabled: true # Set to false to disable the init container
+    image:
+      repository: postgres
+      tag: "" # Uses postgresql.image.tag by default for consistency
+
 # Liveness probe configuration for the main Inngest container
 # Increase initialDelaySeconds when connecting to external databases that take longer to initialize
 livenessProbe:
