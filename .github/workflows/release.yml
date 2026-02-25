@@ -28,6 +28,18 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      - name: Verify Chart version matches tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          CHART_VERSION=$(grep '^version:' Chart.yaml | awk '{print $2}')
+          if [ "$TAG_VERSION" != "$CHART_VERSION" ]; then
+            echo "❌ Chart.yaml version ($CHART_VERSION) does not match git tag (v$TAG_VERSION)"
+            echo "   Update the version field in Chart.yaml to $TAG_VERSION before releasing."
+            exit 1
+          fi
+          echo "✅ Chart.yaml version ($CHART_VERSION) matches git tag (v$TAG_VERSION)"
+
       - name: Package and Push Chart
         run: |
           helm package .
