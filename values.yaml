@@ -154,6 +154,19 @@ inngest:
   sqlite:
     dir: "" # SQLite directory path (INNGEST_SQLITE_DIR)
 
+  # Extra environment variables to pass to the Inngest container
+  # Useful for setting env vars supported by future versions of Inngest
+  # Example:
+  #   extraEnv:
+  #     - name: INNGEST_CUSTOM_VAR
+  #       value: "custom-value"
+  #     - name: INNGEST_SECRET_VAR
+  #       valueFrom:
+  #         secretKeyRef:
+  #           name: my-secret
+  #           key: secret-key
+  extraEnv: []
+
 # Internal PostgreSQL database configuration
 # Set enabled: false to use external PostgreSQL (configure inngest.postgres.uri)
 postgresql:

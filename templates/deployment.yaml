@@ -90,6 +90,11 @@ spec:
             failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          # Extra environment variables from values
+          {{- with .Values.inngest.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           # Load configuration from ConfigMap and secrets
           envFrom:
             # Non-sensitive configuration (ports, log levels, etc.)
