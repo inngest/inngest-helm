@@ -51,6 +51,24 @@ spec:
       # Pod-level security context - runs as non-root user for security
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if and .Values.postgresql.enabled .Values.initContainers.waitForPostgres.enabled }}
+      # Init container waits for PostgreSQL to be ready before starting Inngest
+      initContainers:
+        - name: wait-for-postgres
+          image: "{{ .Values.initContainers.waitForPostgres.image.repository }}:{{ .Values.initContainers.waitForPostgres.image.tag | default .Values.postgresql.image.tag }}"
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for PostgreSQL to be ready..."
+              until pg_isready -h {{ include "inngest.postgresql.fullname" . }} -p {{ .Values.postgresql.service.port }} -U {{ .Values.postgresql.auth.username }} -d {{ .Values.postgresql.auth.database }}; do
+                echo "PostgreSQL is not ready yet. Retrying in 2 seconds..."
+                sleep 2
+              done
+              echo "PostgreSQL is ready!"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+      {{- end }}
       containers:
         # Main Inngest application container
         - name: {{ .Chart.Name }}
